@@ -6,12 +6,14 @@ import com.example.quiz_service.feign.QuizInterface;
 import com.example.quiz_service.model.QuestionWrapper;
 import com.example.quiz_service.model.Quiz;
 import com.example.quiz_service.model.Response;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +40,10 @@ public class QuizService {
         return new ResponseEntity<>("Created", HttpStatus.CREATED);
     }
 
+    @CircuitBreaker(
+            name = "questionService",
+            fallbackMethod = "getQuestionsFallback"
+    )
     public ResponseEntity<List<QuestionWrapper>> getQuizQuestions(int id) {
         Optional<Quiz> quiz = quizDao.findById(id);
 
@@ -47,6 +53,10 @@ public class QuizService {
 
 
         return questions;
+    }
+
+    public ResponseEntity<List<QuestionWrapper>> getQuestionsFallback(int id, Exception ex) {
+        return new ResponseEntity<>(Collections.emptyList(), HttpStatus.SERVICE_UNAVAILABLE);
     }
 
     public ResponseEntity<Integer> calculateResult(Integer id, List<Response> responses) {
