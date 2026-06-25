@@ -10,6 +10,7 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,6 +25,10 @@ public class QuizService {
 
 //    @Autowired
 //    QuestionRepo questionRepo;
+
+    @Autowired
+    private JmsTemplate jmsTemplate;
+
     @Autowired
     QuizInterface quizInterface;
 

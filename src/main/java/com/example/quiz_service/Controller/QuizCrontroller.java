@@ -25,7 +25,7 @@ public class QuizCrontroller {
     }
 
     @GetMapping("getQuiz/{id}")
-    @RateLimiter(name = "quizService", fallbackMethod = "rateLimiterFallback")
+//    @RateLimiter(name = "quizService", fallbackMethod = "rateLimiterFallback")
     public ResponseEntity<List<QuestionWrapper>> getQuiz(@PathVariable int id){
         System.out.println("quiz");
         return quizService.getQuizQuestions(id);
